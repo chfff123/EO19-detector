@@ -1,12 +1,9 @@
 # EO19: Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring
 
-**EO19** is an insect detection dataset designed for agricultural pest monitoring.  
-It organizes categories at the **family** level (Latin names), and introduces a **life-stage-aware labeling rule**: for holometabolous families, **Adult** and **Larva** are annotated as **two separate categories** to reduce intra-class appearance conflict in training.
-
-> TODO: Add paper PDF link / project page / dataset download link  
-> Paper: **EO19: A Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring** (Jan 2026)  
-> Authors: TODO (Your author list)  
-> Affiliation: Macau University of Science and Technology (Course Final Project Report)
+> Paper: TODO (PDF / arXiv / project page)  
+> Dataset download: TODO  
+> Authors: TODO  
+> Code: TODO
 
 ---
 
@@ -17,9 +14,16 @@ It organizes categories at the **family** level (Latin names), and introduces a 
 - [Image Collection](#image-collection)
 - [Rename Rule](#rename-rule)
 - [Annotations & Formats](#annotations--formats)
-- [Evaluation Protocol](#evaluation-protocol)
-- [Baseline Results](#baseline-results)
-- [Reproducibility](#reproducibility)
+- [Requirements (Software)](#requirements-software)
+- [Pretrained Models](#pretrained-models)
+- [Preparation for Testing](#preparation-for-testing)
+- [Model Zoo & Results (3-run Average)](#model-zoo--results-3-run-average)
+  - [Co-DINO (ViT-Large, 5-scale)](#co-dino-vit-large-5-scale)
+  - [RT-DETR (PResNet-18)](#rt-detr-presnet-18)
+  - [Co-DETR (ResNet-50)](#co-detr-resnet-50)
+  - [DEIM v1 (HGNetv2)](#deim-v1-hgnetv2)
+  - [D-FINE Large (HGNetv2)](#d-fine-large-hgnetv2)
+  - [D-FINE Medium (HGNetv2)](#d-fine-medium-hgnetv2)
 - [Download](#download)
 - [Citation](#citation)
 - [License](#license)
@@ -29,105 +33,258 @@ It organizes categories at the **family** level (Latin names), and introduces a 
 ---
 
 ## Introduction
-Insect pests can significantly reduce crop yields; building reliable vision models depends heavily on **high-quality datasets**. Existing pest datasets often suffer from limited species coverage, insufficient sample sizes, or taxonomy inaccuracies. EO19 targets these issues by combining **taxonomy-aware category design** and **expert-verified data curation**.  
-(See the paper for full motivation and background.)
+EO19 is an insect detection dataset designed for agricultural pest monitoring.  
+It organizes categories at the **family** level (Latin names), and introduces a **life-stage-aware labeling rule**: for holometabolous families, **Adult** and **Larva** are annotated as **two separate categories** to reduce intra-class appearance conflict in training.
 
 ---
 
 ## Dataset Overview
-- **Scope:** Insecta → **8 orders**, **19 families** (taxonomy-based), **30 categories** (life-stage-aware for part of families) 
-- **Images:** **24,626** total   
-- **Holometabolous split:** **11 families** are holometabolous and are split into **Adult / Larva** (→ 22 categories). The remaining families keep one category each.  
-- **Image sources:** real habitat scenes, wild high-res shots, specimen photos, plus a very small number of AI-generated images (≈5). 
+- **Scope:** Insecta → **8 orders**, **19 families**, **30 categories**
+- **Images:** **24,626** total
+- **Life-stage split:** **11 holometabolous families** split into **Adult / Larva** (→ 22 categories); remaining families keep one category each.
+- **Sources:** habitat photos + specimen photos + a very small number of AI-generated images.
 
 ---
 
 ## Taxonomy & Label Space
-### Why “Family” (科) and Latin names?
-EO19 uses **family** as the practical recognition unit because pesticide selection often correlates well with family-level identification, while Latin names provide strict one-to-one mapping and reduce ambiguity. {index=10}
+### Why “Family” and Latin names?
+EO19 uses family-level categories to reduce ambiguity and align with practical pest monitoring decisions.
 
 ### Life-stage-aware labeling
-- **Holometabolous (完全变态):** egg–larva–pupa–adult. Larva and adult differ greatly in morphology and ecological niche, so EO19 splits them into separate categories (e.g., `Crambidae_Adult` and `Crambidae_Larva`). {index=11}  
-- **Hemimetabolous (不完全变态):** nymph and adult are morphologically similar, so EO19 keeps them in one category (e.g., `Fulgoridae`).
+- **Holometabolous:** egg–larva–pupa–adult → split `Family_Adult` and `Family_Larva`
+- **Hemimetabolous:** nymph and adult are similar → keep one category
 
 ---
 
 ## Image Collection
 EO19 images come from:
-1) **Existing datasets** (IP102 as a major source) with multi-round filtering (low-res removal, watermark/occlusion removal, mislabel removal, expert screening).
-2) **New web collection** via Latin/English/Chinese/common names + species names, crawler-based pre-collection, then the same screening strategy; about **14,000** images collected by this route. 
+1) Existing datasets (screened and cleaned)  
+2) Web collection via Latin/English/Chinese/common names + species names, followed by the same screening strategy.
 
 ---
 
 ## Rename Rule
-To make category membership explicit in filenames, EO19 applies a unified renaming rule: 
-- **Holometabolous families:** `A_<FamilyLatin>_<Index>.jpg` for Adult, `L_<FamilyLatin>_<Index>.jpg` for Larva  
-  - Example: `A_Cerambycidae_0001.jpg`, `L_Cerambycidae_0001.jpg`
-- **Hemimetabolous families:** `<FamilyLatin>_<Index>.jpg`  
-  - Example: `Acrididae_0008.jpg`
+Unified filename rule:
+- Holometabolous families:
+  - Adult: `A_<FamilyLatin>_<Index>.jpg`
+  - Larva: `L_<FamilyLatin>_<Index>.jpg`
+- Hemimetabolous families:
+  - `<FamilyLatin>_<Index>.jpg`
+
+Examples:
+- `A_Cerambycidae_0001.jpg`
+- `L_Cerambycidae_0001.jpg`
+- `Acrididae_0008.jpg`
 
 ---
 
 ## Annotations & Formats
-- Annotation tool: **LabelImg**, labeled by four annotators with category-specific biology prep; all boxes tightly cover the entire object; difficult/incorrect samples are replaced; labels are **expert-verified**. 
-- Primary label format: **Pascal VOC XML** (per-image). 
-- Export formats: converted via Python scripts into:
-  - **YOLO** (`.txt`)
-  - **COCO** (`.json`) 
+- Annotation tool: LabelImg
+- Bounding boxes: tightly cover entire insect body
+- Primary format: Pascal VOC XML
+- Export formats: YOLO (`.txt`), COCO (`.json`)
 
 ---
 
-## Evaluation Protocol
-EO19 reports standard COCO-style metrics (AP, AP50, AP75, AP_S/M/L).  
-Baseline experiments run under unified protocols with repeated trials to ensure reproducibility.
+## Requirements (Software)
+
+> Notes:
+> - Different baselines may use different original frameworks; pin dependencies per model.
+> - Replace “TODO” with the exact versions you used if you want strict reproducibility.
+
+| Model | Python | PyTorch / TorchVision | CUDA / cuDNN | Framework / Key deps |
+|---|---|---|---|---|
+| Co-DINO (ViT-L, 5-scale) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.11.0, MMCV 1.5.0, MMDetection 2.25.3 |
+| Co-DETR (R50) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.11.0, MMCV 1.5.0, MMDetection 2.25.3 |
+| RT-DETR (PResNet-18) | TODO | 2.4.1 | 12.1 / 9.1.2 | Project native deps |
+| DEIM v1 (HGNetv2) | TODO | 2.0.1 / 0.15.2 | TODO | faster-coco-eval 1.6.5, PyYAML, TensorBoard, SciPy, calflops, Transformers |
+| D-FINE (M/L) (HGNetv2) | TODO | TODO | TODO | Pin versions in your repo |
 
 ---
 
-## Baseline Results
-Below are representative baselines evaluated on EO19 (mean over 3 runs when available).  
-> **Note:** “AP” here refers to COCO-style AP (AP@[.50:.95]). 
+## Pretrained Models
 
-| Model | Backbone / Setting | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
+Recommended layout:
+```text
+pretrained/
+  codino_vitl_5scale.pth
+  codetr_r50.pth
+  rtdetr_r18.pth
+  deim_v1_hgnetv2.pth
+  dfine_m_hgnetv2.pth
+  dfine_l_hgnetv2.pth
+```
+
+| Model | Checkpoint | Download | SHA256 |
+|---|---|---|---|
+| Co-DINO (ViT-L, 5-scale) | `pretrained/codino_vitl_5scale.pth` | TODO | TODO |
+| RT-DETR (PResNet-18) | `pretrained/rtdetr_r18.pth` | TODO | TODO |
+| Co-DETR (R50) | `pretrained/codetr_r50.pth` | TODO | TODO |
+| DEIM v1 (HGNetv2) | `pretrained/deim_v1_hgnetv2.pth` | TODO | TODO |
+| D-FINE Medium (HGNetv2) | `pretrained/dfine_m_hgnetv2.pth` | TODO | TODO |
+| D-FINE Large (HGNetv2) | `pretrained/dfine_l_hgnetv2.pth` | TODO | TODO |
+
+---
+
+## Preparation for Testing
+
+### 1) Dataset structure (COCO format)
+```text
+EO19/
+  images/
+    train/
+    val/
+    test/
+  annotations/
+    eo19_train.json
+    eo19_val.json
+    eo19_test.json
+```
+
+### 2) Ensure class count matches
+EO19 uses **30 categories**. Make sure `num_classes = 30` in your model config.
+
+### 3) Point configs to EO19 paths
+Examples (edit to your framework):
+- `data_root = /path/to/EO19`
+- `ann_file = annotations/eo19_val.json`
+- `img_prefix = images/val/`
+
+### 4) Run evaluation (fill in exact commands)
+Co-DETR / Co-DINO (MMDetection-like):
+```bash
+python tools/test.py <config.py> <checkpoint.pth> --eval bbox
+```
+
+RT-DETR:
+```bash
+python tools/eval.py -c <config.yaml> -r <checkpoint.pth>
+```
+
+DEIM / D-FINE:
+```bash
+python tools/eval.py --config <yaml> --resume <checkpoint>
+```
+
+> Replace the above with the exact scripts/arguments used in your repos.
+
+---
+
+## Model Zoo & Results (3-run Average)
+
+All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 validation split.
+
+### Leaderboard (avg of 3 runs)
+| Model | Backbone | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
 |---|---|---:|---:|---:|---:|---:|---:|
-| Co-DINO | ViT-Large, 5-scale | 0.733* | 0.930* | 0.801* | 0.416* | 0.590* | 0.823* |
+| D-FINE Large | HGNetv2 | 0.701 | 0.900 | 0.762 | 0.321 | 0.534 | 0.799 |
+| D-FINE Medium | HGNetv2 | 0.693 | 0.885 | 0.756 | 0.282 | 0.524 | 0.792 |
+| DEIM v1 | HGNetv2 | 0.692 | 0.887 | 0.754 | 0.309 | 0.545 | 0.794 |
 | RT-DETR | PResNet-18 | 0.666 | 0.866 | 0.729 | 0.277 | 0.492 | 0.770 |
 | Co-DETR | ResNet-50 | 0.611 | 0.814 | 0.668 | 0.218 | 0.408 | 0.720 |
-| DEIM v1 | HGNetv2 | 0.692 | 0.887 | 0.754 | 0.309 | 0.545 | 0.794 |
-| D-FINE (L) | HGNetv2 | 0.701 | 0.900 | 0.762 | 0.321 | 0.534 | 0.799 |
-| D-FINE (M) | HGNetv2 | 0.693 | 0.885 | 0.756 | 0.282 | 0.524 | 0.792 |
-
-
+| Co-DINO | ViT-L (5-scale) | TBD | TBD | TBD | TBD | TBD | TBD |
 
 ---
 
-## Reproducibility
-This project evaluated multiple frameworks under controlled environments. Example (MMDetection stack used in Co-DETR experiments):  
-- Python 3.7.12, PyTorch 1.11.0, TorchVision 0.12.0  
-- CUDA 11.3, cuDNN 8.2  
-- OpenCV 4.11.0, MMCV 1.5.0, MMDetection 2.25.3 
+## Co-DINO (ViT-Large, 5-scale)
 
-> TODO: Add your exact training commands / configs / checkpoints download links.
+| Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.733 | 0.930 | 0.801 | 0.416 | 0.590 | 0.823 |
+| 2 | TBD | TBD | TBD | TBD | TBD | TBD |
+| 3 | TBD | TBD | TBD | TBD | TBD | TBD |
+| **avg** | **TBD** | **TBD** | **TBD** | **TBD** | **TBD** | **TBD** |
+
+---
+
+## RT-DETR (PResNet-18)
+
+| Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.662 | 0.858 | 0.723 | 0.275 | 0.480 | 0.770 |
+| 2 | 0.668 | 0.870 | 0.727 | 0.290 | 0.490 | 0.768 |
+| 3 | 0.668 | 0.869 | 0.736 | 0.266 | 0.505 | 0.772 |
+| **avg** | **0.666** | **0.866** | **0.729** | **0.277** | **0.492** | **0.770** |
+
+---
+
+## Co-DETR (ResNet-50)
+
+| Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.612 | 0.815 | 0.667 | 0.226 | 0.411 | 0.718 |
+| 2 | 0.617 | 0.819 | 0.678 | 0.235 | 0.380 | 0.727 |
+| 3 | 0.605 | 0.807 | 0.660 | 0.194 | 0.433 | 0.714 |
+| **avg** | **0.611** | **0.814** | **0.668** | **0.218** | **0.408** | **0.720** |
+
+---
+
+## DEIM v1 (HGNetv2)
+
+| Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.692 | 0.889 | 0.755 | 0.297 | 0.542 | 0.794 |
+| 2 | 0.691 | 0.884 | 0.752 | 0.305 | 0.549 | 0.793 |
+| 3 | 0.692 | 0.888 | 0.755 | 0.325 | 0.545 | 0.795 |
+| **avg** | **0.692** | **0.887** | **0.754** | **0.309** | **0.545** | **0.794** |
+
+---
+
+## D-FINE Large (HGNetv2)
+
+| Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.701 | 0.899 | 0.763 | 0.331 | 0.528 | 0.798 |
+| 2 | 0.697 | 0.894 | 0.758 | 0.309 | 0.544 | 0.797 |
+| 3 | 0.704 | 0.906 | 0.765 | 0.323 | 0.529 | 0.801 |
+| **avg** | **0.701** | **0.900** | **0.762** | **0.321** | **0.534** | **0.799** |
+
+---
+
+## D-FINE Medium (HGNetv2)
+
+| Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.691 | 0.887 | 0.755 | 0.292 | 0.538 | 0.791 |
+| 2 | 0.698 | 0.883 | 0.756 | 0.279 | 0.513 | 0.794 |
+| 3 | 0.690 | 0.885 | 0.756 | 0.276 | 0.521 | 0.792 |
+| **avg** | **0.693** | **0.885** | **0.756** | **0.282** | **0.524** | **0.792** |
 
 ---
 
 ## Download
-> TODO: Provide dataset download link(s) and checksum(s).
+- Dataset: TODO
+- Checksums: TODO
 
-Recommended structure (COCO format example):
-```text
-EO19/
-├── images/
-│   ├── train/
-│   ├── val/
-│   └── test/
-├── annotations/
-│   ├── eo19_train.json
-│   ├── eo19_val.json
-└── └── eo19_test.json
+---
 
-Recommended structure (YOLO format) :
-labels_yolo/               
-    ├── train/
-    ├── val/
-    └── test/
+## Citation
+```bibtex
+@article{EO19_2026,
+  title   = {EO19: A Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring},
+  author  = {TODO},
+  journal = {Technical Report / Course Final Project Report},
+  year    = {2026},
+  note    = {Macau University of Science and Technology},
+  url     = {TODO}
+}
+```
 
+---
+
+## License
+- Paper/text: TODO
+- Dataset: TODO (e.g., CC BY-NC 4.0 / research-only)
+- Code: TODO (e.g., MIT)
+
+---
+
+## Contact
+- GitHub: https://github.com/chfff123
+- Email: TODO
+
+---
+
+## Acknowledgements
+- IP102 dataset (screened and cleaned as a major image source)
+- Thanks to agriculture experts for verification and label auditing
