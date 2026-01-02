@@ -1,9 +1,17 @@
 # EO19: Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring
 
-> Paper: TODO (PDF / arXiv / project page)  
-> Dataset download: TODO  
-> Authors: TODO  
-> Code: TODO
+> **Notice (Confidential / Under Review)**  
+> This repository is prepared for the EO19 paper and will be **partially released**.  
+> Since the paper/dataset is **not yet published**, some sensitive information (e.g., download links, full author list, checkpoints, and exact paths) is intentionally withheld.  
+> Placeholders are used to mark unpublished items:
+> - **TODO**: to be filled after publication (final info not ready yet)  
+> - **TBA**: to be announced (will be disclosed later)  
+> Please do not redistribute any private materials until the official release.
+
+> Paper: TBA (PDF / arXiv / project page)  
+> Dataset download: TBA
+> Authors: TBA 
+> Code: TBA
 
 ---
 
@@ -263,12 +271,12 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 ## Gradcam
 
-![rtdetrv2_eigencam_20251204_023119](https://github.com/user-attachments/assets/720eb01a-7370-4afa-9ae0-c3a35d7ef3ee)
-![rtdetrv2_eigencam_20251204_020952](https://github.com/user-attachments/assets/b9fae2d4-4bfa-493c-b650-876a3388758c)
-![rtdetrv2_eigencam_20251106_204435](https://github.com/user-attachments/assets/2b812fb6-4a1c-42bf-a0d2-773c49f43738)
-![rtdetrv2_eigencam_20251204_022229](https://github.com/user-attachments/assets/36e18aea-68d2-4766-ae48-913e472e667e)
-![rtdetrv2_eigencam_20251204_022646](https://github.com/user-attachments/assets/5f952303-8036-4663-99d1-9216aacb0b6e)
-![rtdetrv2_eigencam_20251204_022951](https://github.com/user-attachments/assets/c667cab8-13a1-42d5-959a-7d30dea0911e)
+![rtdetrv2_eigencam_20251204_023119](https://github.com/user-attachments/assets/720eb01a-7370-4afa-9ae0-c3a35d7ef3ee) ![rtdetrv2_eigencam_20251204_020952](https://github.com/user-attachments/assets/b9fae2d4-4bfa-493c-b650-876a3388758c)
+
+![rtdetrv2_eigencam_20251106_204435](https://github.com/user-attachments/assets/2b812fb6-4a1c-42bf-a0d2-773c49f43738) ![rtdetrv2_eigencam_20251204_022229](https://github.com/user-attachments/assets/36e18aea-68d2-4766-ae48-913e472e667e)
+
+![rtdetrv2_eigencam_20251204_022646](https://github.com/user-attachments/assets/5f952303-8036-4663-99d1-9216aacb0b6e) ![rtdetrv2_eigencam_20251204_022951](https://github.com/user-attachments/assets/c667cab8-13a1-42d5-959a-7d30dea0911e)
+
 
 ---
 
