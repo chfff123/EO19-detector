@@ -1,0 +1,41 @@
+# datasets
+data/
+**/data/
+datasets/
+**/datasets/
+
+# checkpoints / weights
+*.pth
+*.pt
+*.ckpt
+*.onnx
+
+# logs / outputs
+work_dirs/
+outputs/
+runs/
+wandb/
+*.log
+
+# caches
+__pycache__/
+*.pyc
+.cache/
+
+# editor / system
+.vscode/
+.idea/
+.DS_Store
+
+# misc outputs
+logs/
+results/
+nohup.out
+
+# python packaging
+*.egg-info/
+build/
+dist/
+
+# env
+.env
