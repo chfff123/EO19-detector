@@ -114,3 +114,20 @@ This project evaluated multiple frameworks under controlled environments. Exampl
 > TODO: Provide dataset download link(s) and checksum(s).
 
 Recommended structure (COCO format example):
+```text
+EO19/
+├── images/
+│   ├── train/
+│   ├── val/
+│   └── test/
+├── annotations/
+│   ├── eo19_train.json
+│   ├── eo19_val.json
+└── └── eo19_test.json
+
+Recommended structure (YOLO format) :
+labels_yolo/               
+    ├── train/
+    ├── val/
+    └── test/
+
