@@ -1,4 +1,4 @@
-# EO19: Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring
+zz# EO19: Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring
 
 > Paper: TODO (PDF / arXiv / project page)  
 > Dataset download: TODO  
@@ -151,7 +151,12 @@ Examples (edit to your framework):
 - `img_prefix = images/val/`
 
 ### 4) Run evaluation (fill in exact commands)
-Co-DETR / Co-DINO (MMDetection-like):
+Co-DINO
+```bash
+python tools/train.py projects/configs/co_dino_vit/co_dino_5scale_vit_large_coco.py --work-dir /home/apulis-dev/code/answerCoDINO --launcher none --cfg-options load_from=/home/apulis-dev/code/pytorch_model.pth data.samples_per_gpu=1 model.backbone.img_size=1024
+```
+
+Co-DETR :
 ```bash
 python tools/train.py projects/configs/co_deformable_detr/co_deformable_detr_r50_1x_coco.py --launcher none
 ```
@@ -161,9 +166,14 @@ RT-DETR:
 python -u tools/train.py -c configs/rtdetrv2/rtdetrv2_r18vd_sp3_120e_coco.yml --output-dir /home/apulis-dev/code/answer -u print_freq=10 2>&1 | tee -a /home/apulis-dev/code/rtdetr-answer-twice/train.log
 ```
 
-DEIM / D-FINE:
+DEIM
 ```bash
-python tools/eval.py --config <yaml> --resume <checkpoint>
+CUDA_VISIBLE_DEVICES=0 python train.py -c configs/deim_dfine/deim_hgnetv2_m_coco.yml --use-amp --seed=0 > output2.log 2>&1
+```
+
+D-FINE
+```bash
+CUDA_VISIBLE_DEVICES=0 python train.py -c configs/dfine/dfine_hgnetv2_l_coco.yml --use-amp --seed=0
 ```
 
 > Replace the above with the exact scripts/arguments used in your repos.
