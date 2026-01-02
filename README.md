@@ -267,6 +267,23 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 | 3 | 0.690 | 0.885 | 0.756 | 0.276 | 0.521 | 0.792 |
 | **avg** | **0.693** | **0.885** | **0.756** | **0.282** | **0.524** | **0.792** |
 
+## YOLOv12 (Experimental)
+
+> YOLO-style metrics reported by the framework: **P**, **R**, **mAP@0.50**, **mAP@0.50:0.95**.  
+> For consistency with the rest of this README:
+> - We map **AP = mAP@0.50:0.95**
+> - We map **AP50 = mAP@0.50**
+> - **AP75 / AP_S / AP_M / AP_L** are **TBA** (not provided by current YOLO output)
+
+### Results (3 runs)
+
+| Group | Images | Instances | P | R | mAP@0.50 | mAP@0.50:0.95 |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 2462 | 5394 | 0.883 | 0.809 | 0.872 | 0.677 |
+| 2 | 2462 | 5394 | 0.880 | 0.817 | 0.870 | 0.675 |
+| 3 | 2462 | 5394 | 0.880 | 0.809 | 0.866 | 0.674 |
+| **avg** | 2462 | 5394 | **0.881** | **0.812** | **0.869** | **0.675** |
+
 ---
 ## Gradcam
 <p>
