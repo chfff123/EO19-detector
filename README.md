@@ -271,11 +271,22 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 ## Gradcam
 
-![rtdetrv2_eigencam_20251204_023119](https://github.com/user-attachments/assets/720eb01a-7370-4afa-9ae0-c3a35d7ef3ee) ![rtdetrv2_eigencam_20251204_020952](https://github.com/user-attachments/assets/b9fae2d4-4bfa-493c-b650-876a3388758c)
+## Gradcam
+<p>
+  <img src="https://github.com/user-attachments/assets/720eb01a-7370-4afa-9ae0-c3a35d7ef3ee" width="45%" />
+  <img src="https://github.com/user-attachments/assets/b9fae2d4-4bfa-493c-b650-876a3388758c" width="45%" />
+</p>
 
-![rtdetrv2_eigencam_20251106_204435](https://github.com/user-attachments/assets/2b812fb6-4a1c-42bf-a0d2-773c49f43738) ![rtdetrv2_eigencam_20251204_022229](https://github.com/user-attachments/assets/36e18aea-68d2-4766-ae48-913e472e667e)
+<p>
+  <img src="https://github.com/user-attachments/assets/2b812fb6-4a1c-42bf-a0d2-773c49f43738" width="45%" />
+  <img src="https://github.com/user-attachments/assets/36e18aea-68d2-4766-ae48-913e472e667e" width="45%" />
+</p>
 
-![rtdetrv2_eigencam_20251204_022646](https://github.com/user-attachments/assets/5f952303-8036-4663-99d1-9216aacb0b6e) ![rtdetrv2_eigencam_20251204_022951](https://github.com/user-attachments/assets/c667cab8-13a1-42d5-959a-7d30dea0911e)
+<p>
+  <img src="https://github.com/user-attachments/assets/5f952303-8036-4663-99d1-9216aacb0b6e" width="45%" />
+  <img src="https://github.com/user-attachments/assets/c667cab8-13a1-42d5-959a-7d30dea0911e" width="45%" />
+</p>
+
 
 
 ---
