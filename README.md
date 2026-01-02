@@ -32,6 +32,7 @@
   - [DEIM v1 (HGNetv2)](#deim-v1-hgnetv2)
   - [D-FINE Large (HGNetv2)](#d-fine-large-hgnetv2)
   - [D-FINE Medium (HGNetv2)](#d-fine-medium-hgnetv2)
+  - [YOLOv12](#YOLOv12-(Experimental))
 - [Download](#download)
 - [Citation](#citation)
 - [License](#license)
