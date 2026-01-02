@@ -1,17 +1,20 @@
 # EO19: Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring
 
-> **Notice (Confidential / Under Review)**  
-> This repository is prepared for the EO19 paper and will be **partially released**.  
-> Since the paper/dataset is **not yet published**, some sensitive information (e.g., download links, full author list, checkpoints, and exact paths) is intentionally withheld.  
-> Placeholders are used to mark unpublished items:
+> **Public Preview (Under Review)**  
+> This repository is a **public preview** prepared for the EO19 paper.  
+> Since the paper/dataset is **not yet published**, the following items are intentionally omitted from this public version:
+> - Dataset download links / private storage  
+> - Full author list & affiliations  
+> - Trained checkpoints (`.pth`) and any private keys/tokens  
+> - Machine-specific absolute paths and internal logs  
+>
+> Placeholders used in this README:
 > - **TODO**: to be filled after publication (final info not ready yet)  
-> - **TBA**: to be announced (will be disclosed later)  
-> Please do not redistribute any private materials until the official release.
+> - **TBA**: to be announced later  
 
-> Paper: TBA (PDF / arXiv / project page)  
-> Dataset download: TODO  
-> Authors: TODO  
-> Code: TODO  
+- **Paper:** TBA (PDF / arXiv / project page)  
+- **Dataset release:** TBA (may be annotations-only / partial release, depending on source licenses)  
+- **Authors:** TODO  
 
 ---
 
@@ -22,6 +25,7 @@
 - [Image Collection](#image-collection)
 - [Rename Rule](#rename-rule)
 - [Annotations & Formats](#annotations--formats)
+- [Quick Start](#quick-start)
 - [Requirements (Software)](#requirements-software)
 - [Pretrained Models](#pretrained-models)
 - [Preparation for Testing](#preparation-for-testing)
@@ -33,6 +37,7 @@
   - [D-FINE Large (HGNetv2)](#d-fine-large-hgnetv2)
   - [D-FINE Medium (HGNetv2)](#d-fine-medium-hgnetv2)
   - [YOLOv12](#yolov12-experimental)
+- [Gradcam](#gradcam)
 - [Download](#download)
 - [Citation](#citation)
 - [License](#license)
@@ -51,11 +56,14 @@ It organizes categories at the **family** level (Latin names), and introduces a 
 - **Scope:** Insecta → **8 orders**, **19 families**, **30 categories**
 - **Images:** **24,626** total
 - **Life-stage split:** **11 holometabolous families** split into **Adult / Larva** (→ 22 categories); remaining families keep one category each.
-- **Sources:** habitat photos + specimen photos + a very small number of AI-generated images.
+- **Sources:** curated images from existing datasets + public web images (details and release policy TBA)
+
+> Note: Final dataset release form will follow original source licenses and publication policy (TBA).
 
 ---
 
 ## Taxonomy & Label Space
+
 ### Why “Family” and Latin names?
 EO19 uses family-level categories to reduce ambiguity and align with practical pest monitoring decisions.
 
@@ -67,8 +75,8 @@ EO19 uses family-level categories to reduce ambiguity and align with practical p
 
 ## Image Collection
 EO19 images come from:
-1) Existing datasets (screened and cleaned)  
-2) Web collection via Latin/English/Chinese/common names + species names, followed by the same screening strategy.
+1) existing datasets (screened and cleaned)  
+2) public web collection via Latin/English/Chinese/common names + species names, followed by the same screening strategy
 
 ---
 
@@ -95,24 +103,60 @@ Examples:
 
 ---
 
+## Quick Start
+
+### 1) Prepare the dataset (COCO format)
+```text
+EO19/
+  images/
+    train/
+    val/
+    test/
+  annotations/
+    eo19_train.json
+    eo19_val.json
+    eo19_test.json
+```
+
+Set:
+```bash
+export EO19_ROOT=/path/to/EO19
+```
+
+### 2) Ensure class count matches
+EO19 uses **30 categories**. Make sure `num_classes = 30` in your config.
+
+### 3) Run evaluation
+This repo reports **COCO-style metrics** on the EO19 validation split.  
+Because different baselines use different codebases, please use each baseline’s native eval script and only change:
+- dataset path (`data_root` / `${EO19_ROOT}`)
+- COCO json (`ann_file`)
+- image folder (`img_prefix`)
+- class count (`num_classes`)
+
+---
+
 ## Requirements (Software)
 
 > Notes:
 > - Different baselines may use different original frameworks; pin dependencies per model.
+> - Versions below reflect one verified setup; they are not the only working combinations.
 
 | Model | Python | PyTorch / TorchVision | CUDA / cuDNN | Framework / Key deps |
 |---|---|---|---|---|
-| Co-DINO (ViT-L, 5-scale) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.11.0, MMCV 1.5.0, MMDetection 2.25.3 |
-| Co-DETR (R50) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.11.0, MMCV 1.5.0, MMDetection 2.25.3 |
+| Co-DINO (ViT-L, 5-scale) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.x, MMCV 1.5.0, MMDetection 2.25.3 |
+| Co-DETR (R50) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.x, MMCV 1.5.0, MMDetection 2.25.3 |
 | RT-DETR (PResNet-18) | 3.7.12 | 2.4.1 | 12.1 / 9.1.2 | Project native deps |
-| DEIM v1 (HGNetv2) | 3.7.12 | 2.0.1 / 0.15.2 | 12.1 / 9.1.2 | faster-coco-eval 1.6.5, PyYAML, TensorBoard, SciPy, calflops, Transformers |
-| D-FINE (M/L) (HGNetv2) | 3.11.9 | 2.1.2 / 0.16.2 | 12.1 / 9.1.2 | faster-coco-eval>=1.6.6 , PyYAML, tensorboard , scipy , calflops , transformers , loguru |
+| DEIM v1 (HGNetv2) | 3.7.12 | 2.0.1 / 0.15.2 | 12.1 / 9.1.2 | faster-coco-eval, PyYAML, TensorBoard, SciPy, calflops, Transformers |
+| D-FINE (M/L) (HGNetv2) | 3.11.9 | 2.1.2 / 0.16.2 | 12.1 / 9.1.2 | faster-coco-eval, PyYAML, tensorboard, scipy, calflops, transformers, loguru |
 
 ---
 
 ## Pretrained Models
+This **public preview** does **not** include trained checkpoints (`.pth`).  
+Checkpoint download links and SHA256 will be provided after publication (TBA).
 
-Recommended layout:
+Recommended layout (local only):
 ```text
 pretrained/
   codino_vitl_5scale.pth
@@ -123,14 +167,14 @@ pretrained/
   dfine_l_hgnetv2.pth
 ```
 
-| Model | Checkpoint | Download | SHA256 |
+| Model | Checkpoint (local path) | Download | SHA256 |
 |---|---|---|---|
-| Co-DINO (ViT-L, 5-scale) | `pretrained/codino_vitl_5scale.pth` | TODO | TODO |
-| RT-DETR (PResNet-18) | `pretrained/rtdetr_r18.pth` | TODO | TODO |
-| Co-DETR (R50) | `pretrained/codetr_r50.pth` | TODO | TODO |
-| DEIM v1 (HGNetv2) | `pretrained/deim_v1_hgnetv2.pth` | TODO | TODO |
-| D-FINE Medium (HGNetv2) | `pretrained/dfine_m_hgnetv2.pth` | TODO | TODO |
-| D-FINE Large (HGNetv2) | `pretrained/dfine_l_hgnetv2.pth` | TODO | TODO |
+| Co-DINO (ViT-L, 5-scale) | `pretrained/codino_vitl_5scale.pth` | TBA | TBA |
+| RT-DETR (PResNet-18) | `pretrained/rtdetr_r18.pth` | TBA | TBA |
+| Co-DETR (R50) | `pretrained/codetr_r50.pth` | TBA | TBA |
+| DEIM v1 (HGNetv2) | `pretrained/deim_v1_hgnetv2.pth` | TBA | TBA |
+| D-FINE Medium (HGNetv2) | `pretrained/dfine_m_hgnetv2.pth` | TBA | TBA |
+| D-FINE Large (HGNetv2) | `pretrained/dfine_l_hgnetv2.pth` | TBA | TBA |
 
 ---
 
@@ -154,43 +198,41 @@ EO19 uses **30 categories**. Make sure `num_classes = 30` in your model config.
 
 ### 3) Point configs to EO19 paths
 Examples (edit to your framework):
-- `data_root = /path/to/EO19`
+- `data_root = ${EO19_ROOT}`
 - `ann_file = annotations/eo19_val.json`
 - `img_prefix = images/val/`
 
-### 4) Run evaluation (fill in exact commands)
-Co-DINO
+### 4) Example commands (single-line)
+Co-DINO (MMDetection-style):
 ```bash
-python tools/train.py projects/configs/co_dino_vit/co_dino_5scale_vit_large_coco.py --work-dir /home/apulis-dev/code/answerCoDINO --launcher none --cfg-options load_from=/home/apulis-dev/code/pytorch_model.pth data.samples_per_gpu=1 model.backbone.img_size=1024
+python tools/train.py projects/configs/co_dino_vit/co_dino_5scale_vit_large_coco.py --work-dir /path/to/output/codino --launcher none --cfg-options data_root=${EO19_ROOT} data.samples_per_gpu=1 model.backbone.img_size=1024 load_from=/path/to/pretrained_or_resume.pth
 ```
 
-Co-DETR :
+Co-DETR (MMDetection-style):
 ```bash
-python tools/train.py projects/configs/co_deformable_detr/co_deformable_detr_r50_1x_coco.py --launcher none
+python tools/train.py projects/configs/co_deformable_detr/co_deformable_detr_r50_1x_coco.py --work-dir /path/to/output/codetr --launcher none --cfg-options data_root=${EO19_ROOT}
 ```
 
 RT-DETR:
 ```bash
-python -u tools/train.py -c configs/rtdetrv2/rtdetrv2_r18vd_sp3_120e_coco.yml --output-dir /home/apulis-dev/code/answer -u print_freq=10 2>&1 | tee -a /home/apulis-dev/code/rtdetr-answer-twice/train.log
+python -u tools/train.py -c configs/rtdetrv2/rtdetrv2_r18vd_sp3_120e_coco.yml --output-dir /path/to/output/rtdetr -u print_freq=10
 ```
 
-DEIM
+DEIM:
 ```bash
-CUDA_VISIBLE_DEVICES=0 python train.py -c configs/deim_dfine/deim_hgnetv2_m_coco.yml --use-amp --seed=0 > output2.log 2>&1
+CUDA_VISIBLE_DEVICES=0 python train.py -c configs/deim_dfine/deim_hgnetv2_m_coco.yml --use-amp --seed=0
 ```
 
-D-FINE
+D-FINE:
 ```bash
 CUDA_VISIBLE_DEVICES=0 python train.py -c configs/dfine/dfine_hgnetv2_l_coco.yml --use-amp --seed=0
 ```
 
-> Replace the above with the exact scripts/arguments used in your repos.
-
 ---
 
 ## Model Zoo & Results (3-run Average)
-
-All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 validation split.
+All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 validation split.  
+Numbers are in **[0, 1]** scale.
 
 ### Leaderboard (avg of 3 runs)
 | Model | Backbone | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
@@ -205,7 +247,6 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 
 ## Co-DINO (ViT-Large, 5-scale)
-
 | Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 0.733 | 0.930 | 0.801 | 0.416 | 0.590 | 0.823 |
@@ -216,7 +257,6 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 
 ## RT-DETR (PResNet-18)
-
 | Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 0.662 | 0.858 | 0.723 | 0.275 | 0.480 | 0.770 |
@@ -227,7 +267,6 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 
 ## Co-DETR (ResNet-50)
-
 | Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 0.612 | 0.815 | 0.667 | 0.226 | 0.411 | 0.718 |
@@ -238,7 +277,6 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 
 ## DEIM v1 (HGNetv2)
-
 | Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 0.692 | 0.889 | 0.755 | 0.297 | 0.542 | 0.794 |
@@ -249,7 +287,6 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 
 ## D-FINE Large (HGNetv2)
-
 | Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 0.701 | 0.899 | 0.763 | 0.331 | 0.528 | 0.798 |
@@ -260,7 +297,6 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ---
 
 ## D-FINE Medium (HGNetv2)
-
 | Run | AP | AP50 | AP75 | AP_S | AP_M | AP_L |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 0.691 | 0.887 | 0.755 | 0.292 | 0.538 | 0.791 |
@@ -268,16 +304,17 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 | 3 | 0.690 | 0.885 | 0.756 | 0.276 | 0.521 | 0.792 |
 | **avg** | **0.693** | **0.885** | **0.756** | **0.282** | **0.524** | **0.792** |
 
+---
+
 ## YOLOv12 (Experimental)
 
 > YOLO-style metrics reported by the framework: **P**, **R**, **mAP@0.50**, **mAP@0.50:0.95**.  
 > For consistency with the rest of this README:
-> - We map **AP = mAP@0.50:0.95**
-> - We map **AP50 = mAP@0.50**
+> - **AP = mAP@0.50:0.95**
+> - **AP50 = mAP@0.50**
 > - **AP75 / AP_S / AP_M / AP_L** are **TBA** (not provided by current YOLO output)
 
 ### Results (3 runs)
-
 | Group | Images | Instances | P | R | mAP@0.50 | mAP@0.50:0.95 |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 2462 | 5394 | 0.883 | 0.809 | 0.872 | 0.677 |
@@ -286,6 +323,7 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 | **avg** | 2462 | 5394 | **0.881** | **0.812** | **0.869** | **0.675** |
 
 ---
+
 ## Gradcam
 <p>
   <img src="https://github.com/user-attachments/assets/720eb01a-7370-4afa-9ae0-c3a35d7ef3ee" width="45%" />
@@ -302,25 +340,23 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
   <img src="https://github.com/user-attachments/assets/c667cab8-13a1-42d5-959a-7d30dea0911e" width="45%" />
 </p>
 
-
-
 ---
 
 ## Download
-- Dataset: TODO
-- Checksums: TODO
+- Dataset: TBA
+- Checksums: TBA
+- Release form: TBA (will comply with original source licenses and publication policy)
 
 ---
 
 ## Citation
 ```bibtex
-@article{EO19_2026,
+@misc{EO19_2026,
   title   = {EO19: A Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring},
   author  = {TODO},
-  journal = {Technical Report / Course Final Project Report},
   year    = {2026},
-  note    = {Macau University of Science and Technology},
-  url     = {TODO}
+  note    = {Technical report / paper under review},
+  url     = {TBA}
 }
 ```
 
@@ -328,8 +364,8 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 
 ## License
 - Paper/text: TODO
-- Dataset: TODO (e.g., CC BY-NC 4.0 / research-only)
-- Code: TODO 
+- Dataset: TODO (e.g., CC BY-NC 4.0 / research-only, subject to source licenses)
+- Code: TODO (e.g., Apache-2.0 / MIT)
 
 ---
 
