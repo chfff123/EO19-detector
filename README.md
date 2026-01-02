@@ -153,12 +153,12 @@ Examples (edit to your framework):
 ### 4) Run evaluation (fill in exact commands)
 Co-DETR / Co-DINO (MMDetection-like):
 ```bash
-python tools/test.py <config.py> <checkpoint.pth> --eval bbox
+python tools/train.py projects/configs/co_deformable_detr/co_deformable_detr_r50_1x_coco.py --launcher none
 ```
 
 RT-DETR:
 ```bash
-python tools/eval.py -c <config.yaml> -r <checkpoint.pth>
+python -u tools/train.py -c configs/rtdetrv2/rtdetrv2_r18vd_sp3_120e_coco.yml --output-dir /home/apulis-dev/code/answer -u print_freq=10 2>&1 | tee -a /home/apulis-dev/code/rtdetr-answer-twice/train.log
 ```
 
 DEIM / D-FINE:
