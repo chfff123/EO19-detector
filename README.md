@@ -104,8 +104,8 @@ Examples:
 | Co-DINO (ViT-L, 5-scale) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.11.0, MMCV 1.5.0, MMDetection 2.25.3 |
 | Co-DETR (R50) | 3.7.12 | 1.11.0 / 0.12.0 | 11.3 / 8.2 | OpenCV 4.11.0, MMCV 1.5.0, MMDetection 2.25.3 |
 | RT-DETR (PResNet-18) | 3.7.12 | 2.4.1 | 12.1 / 9.1.2 | Project native deps |
-| DEIM v1 (HGNetv2) | 3.7.12 | 2.0.1 / 0.15.2 | TODO | faster-coco-eval 1.6.5, PyYAML, TensorBoard, SciPy, calflops, Transformers |
-| D-FINE (M/L) (HGNetv2) | 3.11.9 | 2.1.2 / 0.16.2 | CUDA12.1 | faster-coco-eval>=1.6.6 , PyYAML, tensorboard , scipy , calflops , transformers , loguru |
+| DEIM v1 (HGNetv2) | 3.7.12 | 2.0.1 / 0.15.2 | 12.1 / 9.1.2 | faster-coco-eval 1.6.5, PyYAML, TensorBoard, SciPy, calflops, Transformers |
+| D-FINE (M/L) (HGNetv2) | 3.11.9 | 2.1.2 / 0.16.2 | 12.1 / 9.1.2 | faster-coco-eval>=1.6.6 , PyYAML, tensorboard , scipy , calflops , transformers , loguru |
 
 ---
 
@@ -328,7 +328,7 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 ## License
 - Paper/text: TODO
 - Dataset: TODO (e.g., CC BY-NC 4.0 / research-only)
-- Code: TODO (e.g., MIT)
+- Code: TODO 
 
 ---
 
