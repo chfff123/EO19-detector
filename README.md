@@ -1,4 +1,4 @@
-zz# EO19: Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring
+# EO19: Family-Level, Life-Stage-Aware Insect Detection Dataset for Agricultural Pest Monitoring
 
 > Paper: TODO (PDF / arXiv / project page)  
 > Dataset download: TODO  
@@ -259,6 +259,10 @@ All results are COCO-style metrics (AP, AP50, AP75, AP_S/M/L) on the same EO19 v
 | 2 | 0.698 | 0.883 | 0.756 | 0.279 | 0.513 | 0.794 |
 | 3 | 0.690 | 0.885 | 0.756 | 0.276 | 0.521 | 0.792 |
 | **avg** | **0.693** | **0.885** | **0.756** | **0.282** | **0.524** | **0.792** |
+
+---
+##Gradcam
+
 
 ---
 
