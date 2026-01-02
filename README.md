@@ -9,9 +9,9 @@
 > Please do not redistribute any private materials until the official release.
 
 > Paper: TBA (PDF / arXiv / project page)  
-> Dataset download: TBA
-> Authors: TBA 
-> Code: TBA
+> Dataset download: TODO
+> Authors: TODO
+> Code: TODO
 
 ---
 
@@ -98,7 +98,6 @@ Examples:
 
 > Notes:
 > - Different baselines may use different original frameworks; pin dependencies per model.
-> - Replace “TODO” with the exact versions you used if you want strict reproducibility.
 
 | Model | Python | PyTorch / TorchVision | CUDA / cuDNN | Framework / Key deps |
 |---|---|---|---|---|
